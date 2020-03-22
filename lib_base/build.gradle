@@ -1,0 +1,79 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'android-aspectjx'
+android {
+    compileSdkVersion versionInfo.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion versionInfo.minSdkVersion
+        targetSdkVersion versionInfo.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField("boolean", "isRelease", String.valueOf(isRelease))
+    }
+
+    buildTypes {
+        debug{
+            buildConfigField("String", "url", "\"${url.debug}\"")
+        }
+        release {
+            buildConfigField("String", "url", "\"${url.release}\"")
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    /*compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }*/
+
+}
+
+dependencies {
+    implementation depsLibs.kotlin
+    implementation depsLibs.appcompact
+    implementation depsLibs.core_ktx
+    api project(':lib_common')
+
+    api (depsLibs.arouterapi){
+        exclude group: 'com.android.support'
+    }
+    api depsLibs.anko
+    api depsLibs.autosize
+    //状态栏相关库
+    api depsLibs.statusbar
+    implementation depsLibs.timber
+
+    //https://github.com/ethanhua/Skeleton (骨架屏 loading)
+    api 'com.ethanhua:skeleton:1.1.2'
+    api 'io.supercharge:shimmerlayout:2.1.0'
+    //https://github.com/scwang90/SmartRefreshLayout
+    api  'com.scwang.smart:refresh-layout-kernel:2.0.0'      //核心必须依赖
+    api  'com.scwang.smart:refresh-footer-classics:2.0.0'    //经典刷新头
+    api  'com.scwang.smart:refresh-header-material:2.0.0'    //谷歌刷新头
+
+    api ('com.alibaba.android:vlayout:1.2.8@aar') {
+        transitive = true
+    }
+
+    //https://github.com/youth5201314/banner/tree/release-1.4.10
+    api ('com.youth.banner:banner:1.4.10'){ //轮播
+        exclude group: 'com.android.support'
+    }
+
+
+    //Toast库 https://github.com/GrenderG/Toasty
+    api (depsLibs.toasty){
+        exclude group: 'com.android.support'
+    }
+    api project(':lib_http')
+    api project(':lib_imgload')
+
+    //https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+    /*api (depsLibs.adapter){
+        exclude group: 'androidx.databinding'
+    }*/
+}

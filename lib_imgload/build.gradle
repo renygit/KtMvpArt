@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion versionInfo.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion versionInfo.minSdkVersion
+        targetSdkVersion versionInfo.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    compileOnly depsLibs.appcompact
+    //glide相关依赖
+    implementation depsLibs.glide
+    annotationProcessor depsLibs.glidecompiler
+    implementation depsLibs.glide_transform        //高斯模糊
+    //让glide用okhttp3加载图片
+    implementation depsLibs.glide_okhttp
+
+}

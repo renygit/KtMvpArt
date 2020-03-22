@@ -1,0 +1,77 @@
+ext {
+    isRelease = true
+
+    packageNameForAPT = "com.git.reny.apt"
+
+    url = [
+            debug  : 'http://api.android.debug',
+            release: 'http://api.android.release'
+    ]
+
+    appId = [
+            applicationId: 'com.git.reny.ktapp',
+            ft_login     : 'com.git.reny.ft_login',
+            ft_home      : 'com.git.reny.ft_home'
+    ]
+
+    versionInfo = [compileSdkVersion: 29,
+                   minSdkVersion    : 19,
+                   targetSdkVersion : 29,
+                   versionCode      : 1,
+                   versionName      : '1.0.0'
+    ]
+
+    depsVersion = [appcompact       : '1.0.0',
+                   kotlin_version   : '1.3.70',
+                   anko_version     : '0.10.8',
+                   autosize_version : '1.2.1',
+                   statusbar_version: '1.5.1',
+                   timber_version   : '4.7.1',
+                   adapter_version  : '3.0.1',
+                   toasty_version   : '1.4.2',
+                   design           : '29.0.0',
+                   recyclerview     : '29.0.0',
+                   constraint       : '1.1.3',
+                   eventbus         : '3.1.1',
+                   greendao         : '3.2.2',
+                   rxjava           : '2.2.9',
+                   rxandroid        : '2.1.1',
+                   arouterapi       : '1.5.0',
+                   aroutercompiler  : '1.2.2',
+                   magicindicator   : '1.5.0',
+                   glide            : '4.11.0',
+                   glidecompiler    : '4.11.0',
+                   glide_transform  : '2.0.1',
+                   okhttp           : '3.12.0',
+                   retrofit2        : '2.5.0',
+                   gson             : '2.8.6',
+    ]
+
+    depsLibs = [appcompact     : 'androidx.appcompat:appcompat:1.0.0',
+                kotlin         : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${depsVersion.kotlin_version}",
+                core_ktx       : 'androidx.core:core-ktx:1.2.0',
+                anko           : "org.jetbrains.anko:anko:${depsVersion.anko_version}",
+                autosize       : "me.jessyan:autosize:${depsVersion.autosize_version}",
+                statusbar      : "com.jaeger.statusbarutil:library:${depsVersion.statusbar_version}",
+                timber         : "com.jakewharton.timber:timber:${depsVersion.timber_version}",
+                adapter        : "com.github.CymChad:BaseRecyclerViewAdapterHelper:${depsVersion.adapter_version}",
+                toasty         : "com.github.GrenderG:Toasty:${depsVersion.toasty_version}",
+                design         : 'com.google.android.material:material:1.0.0',
+                recyclerview   : 'androidx.recyclerview:recyclerview:1.0.0',
+                constraint     : 'androidx.constraintlayout:constraintlayout:1.1.3',
+                eventbus       : "org.greenrobot:eventbus:${depsVersion.eventbus}",
+                greendao       : "org.greenrobot:greendao:${depsVersion.greendao}",
+                rxjava         : "io.reactivex.rxjava2:rxjava:${depsVersion.rxjava}",
+                rxandroid      : "io.reactivex.rxjava2:rxandroid:${depsVersion.rxandroid}",
+                arouterapi     : "com.alibaba:arouter-api:${depsVersion.arouterapi}",
+                aroutercompiler: "com.alibaba:arouter-compiler:${depsVersion.aroutercompiler}",
+                magicindicator : "com.github.hackware1993:MagicIndicator:${depsVersion.magicindicator}",
+                glide          : "com.github.bumptech.glide:glide:${depsVersion.glide}",
+                glidecompiler  : "com.github.bumptech.glide:compiler:${depsVersion.glidecompiler}",
+                glide_okhttp   : "com.github.bumptech.glide:okhttp3-integration:${depsVersion.glide}",
+                glide_transform: "jp.wasabeef:glide-transformations:${depsVersion.glide_transform}",
+                okhttp         : "com.squareup.okhttp3:okhttp:${depsVersion.okhttp}",
+                retrofit2      : "com.squareup.retrofit2:adapter-rxjava2:${depsVersion.retrofit2}",
+                gson           : "com.google.code.gson:gson:${depsVersion.gson}",
+    ]
+}

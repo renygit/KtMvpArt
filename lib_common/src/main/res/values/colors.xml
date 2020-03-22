@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme">#008577</color>
+
+    <color name="colorPrimary">@color/theme</color>
+    <color name="colorPrimaryDark">@color/theme</color>
+    <color name="colorAccent">@color/theme</color>
+
+    <color name="tool_bg_color_white">#f0f0f0</color>
+</resources>

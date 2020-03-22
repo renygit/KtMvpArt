@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion versionInfo.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion versionInfo.minSdkVersion
+        targetSdkVersion versionInfo.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    compileOnly depsLibs.appcompact
+
+    /*api depsLibs.rxjava
+    api depsLibs.rxandroid*/
+    api (depsLibs.retrofit2, {
+        exclude group: 'io.reactivex.rxjava2'
+    })
+
+    api depsLibs.gson
+}

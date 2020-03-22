@@ -1,0 +1,5 @@
+include ':app', ':lib_base', ':lib_mvp', ':ft_home', ':lib_http', ':lib_imgload'
+rootProject.name='KtApp'
+include ':lib_mvp_ui'
+include ':ft_login'
+include ':lib_common'

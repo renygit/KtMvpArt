@@ -1,0 +1,61 @@
+if (isRelease) {
+    apply plugin: 'com.android.library'
+} else {
+    apply plugin: 'com.android.application'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: "org.jetbrains.kotlin.kapt"
+
+android {
+    compileSdkVersion versionInfo.compileSdkVersion
+
+    defaultConfig {
+        if (!isRelease) {
+            applicationId appId.ft_login
+        }
+        minSdkVersion versionInfo.minSdkVersion
+        targetSdkVersion versionInfo.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+                arg("AROUTER_GENERATE_DOC", "enable")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            if (!isRelease) {//测试环境
+                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
+            } else {//正式环境
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+                java {
+                    exclude '**/debug/**'
+                }
+            }
+
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation depsLibs.kotlin
+    implementation depsLibs.appcompact
+    implementation depsLibs.core_ktx
+
+    implementation project(':lib_mvp_ui')
+    kapt depsLibs.aroutercompiler
+}

@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-kapt'
+apply plugin: "org.jetbrains.kotlin.kapt"
+
+android {
+    compileSdkVersion versionInfo.compileSdkVersion
+
+    defaultConfig {
+        applicationId appId.applicationId
+        minSdkVersion versionInfo.minSdkVersion
+        targetSdkVersion versionInfo.targetSdkVersion
+        versionCode versionInfo.versionCode
+        versionName versionInfo.versionName
+
+        /*javaCompileOptions{
+            annotationProcessorOptions{
+                arguments = [content : 'hello kotlinpoet.....']
+            }
+        }*/
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+                arg("packageNameForAPT", packageNameForAPT)
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    /*compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }*/
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation depsLibs.kotlin
+    implementation depsLibs.appcompact
+    implementation depsLibs.core_ktx
+
+    implementation project(':lib_base')
+    kapt depsLibs.aroutercompiler
+
+    //implementation "org.jetbrains.anko:anko:$anko_version"
+    if(isRelease){
+        implementation project(path: ':ft_login')
+        implementation project(path: ':ft_home')
+    }
+}
