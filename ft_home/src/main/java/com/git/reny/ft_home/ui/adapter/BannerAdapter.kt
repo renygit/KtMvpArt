@@ -14,10 +14,9 @@ import com.youth.banner.Transformer
 class BannerAdapter : BaseDelegateAdapter<List<Girl>>(
     LinearLayoutHelper(),
     R.layout.item_home_banner,
-    0,
     1
 ) {
-    override fun convert(holder: BaseViewHolder, item: List<Girl>, position: Int) {
+    override fun convert(holder: BaseViewHolder, item: List<Girl>?, position: Int) {
         val mBanner = holder.getView<Banner>(R.id.banner)
         mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR)
         val imgs = mutableListOf<String>()

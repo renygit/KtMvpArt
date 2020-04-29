@@ -14,7 +14,6 @@ import java.util.*
 abstract class BaseDelegateAdapter<T>(
     private val layoutHelper: LayoutHelper,
     private val layoutId: Int,
-    private val viewType:Int,
     private val mCount: Int? = null,
     data: MutableList<T>? = null
 ) : DelegateAdapter.Adapter<BaseViewHolder>() {
@@ -29,12 +28,15 @@ abstract class BaseDelegateAdapter<T>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return BaseViewHolder(
-            LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
+            LayoutInflater.from(parent.context).inflate(viewType, parent, false)
         )
     }
 
     override fun getItemViewType(position: Int): Int {
-        return viewType
+        if (layoutId == 0) {
+            throw RuntimeException("${this.javaClass.simpleName}: layoutId == 0")
+        }
+        return layoutId
     }
 
     override fun getItemCount(): Int = mCount ?: data.size
@@ -42,17 +44,15 @@ abstract class BaseDelegateAdapter<T>(
     override fun onCreateLayoutHelper(): LayoutHelper = layoutHelper
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        getItem(position)?.let {
-            convert(holder, it, position)
-            bindViewClickListener(holder, viewType, position)
-        }
+        convert(holder, getItem(position), position)
+        bindViewClickListener(holder, getItemViewType(position), position)
     }
 
     open fun getItem(@IntRange(from = 0) position: Int): T? {
         return if(position < data.size) data[position] else null
     }
 
-    protected abstract fun convert(holder: BaseViewHolder, item: T, position: Int)
+    protected abstract fun convert(holder: BaseViewHolder, item: T?, position: Int)
 
 
     open fun clear(){

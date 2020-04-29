@@ -16,14 +16,14 @@ abstract class MvpBasePresenter<V : MvpBaseView>(v: V) {
      */
     open var mView: SoftReference<V> = SoftReference(v)
 
-    protected fun getIView():V{
+    fun getIView():V{
         mView.get()?.let {
             return it
         }
         throw RuntimeException("activity 已经被回收，无法在Presenter调用")
     }
 
-    protected fun getActivity():Activity?{
+    fun getActivity():Activity?{
         return getIView().getActivity()
     }
 
@@ -59,7 +59,7 @@ abstract class MvpBasePresenter<V : MvpBaseView>(v: V) {
     open fun loadData(isRefresh:Boolean){
         if(isFirst){
             //如果是第一次进入页面 可以展示LOADING页面
-            getIView().showLoading(STATE_LOADING)
+            getIView().showPageState(STATE_LOADING)
         }else{
             //加载过 就认为是在执行下拉刷新 或上拉加载更多(多半用不到，下拉上拉一般是自动变化的UI，不用代码设置)
             getIView().showRefresh(if(isRefresh) STATE_REFRESH_SHOW else STATE_LOAD_MORE_SHOW)
@@ -68,8 +68,9 @@ abstract class MvpBasePresenter<V : MvpBaseView>(v: V) {
 
     //数据加载完成后应该调用的方法 设置相关UI状态
     open fun setLoadState(@LoadState state: Int, hasMore:Boolean, isRefresh:Boolean){
+        getIView().hideLoading()
         if(isFirst){
-            getIView().showLoading(state)
+            getIView().showPageState(state)
             if(state == STATE_CONTENT){
                 isFirst = false
             }

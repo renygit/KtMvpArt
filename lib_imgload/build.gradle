@@ -22,7 +22,7 @@ android {
 dependencies {
     compileOnly depsLibs.appcompact
     //glide相关依赖
-    implementation depsLibs.glide
+    api depsLibs.glide
     annotationProcessor depsLibs.glidecompiler
     implementation depsLibs.glide_transform        //高斯模糊
     //让glide用okhttp3加载图片

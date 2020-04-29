@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- LoadingView 自定义属性 -->
+    <declare-styleable name="LoadingView">
+        <attr name="singleColor" format="color"/>
+        <attr name="circleRadius" format="dimension" />
+    </declare-styleable>
+</resources>

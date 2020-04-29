@@ -55,7 +55,7 @@ class HomeFragment : MvpFragment(), HomeView {
             singleClick { checkLogin { showToast("已经登录 ${LoginApi.api.getUser()?.userName} 点击位置$position") }}
         }
 
-        screenRecyclerBuilder = Skeleton.bind(recycler)
+        mScreenRecyclerBuilder = Skeleton.bind(recycler)
             .adapter(adapter)
             .count(1)
             .load(R.layout.screen_home)

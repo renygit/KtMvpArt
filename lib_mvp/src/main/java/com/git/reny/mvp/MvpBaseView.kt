@@ -16,9 +16,13 @@ interface MvpBaseView {
     fun initView(savedInstanceState: Bundle?)
 
     //根据LoadState显示loading、error、noNetwork、empty、content
-    fun showLoading(@LoadState state: Int)
+    fun showPageState(@LoadState state: Int)
 
     //根据RefreshState显示refresh_show、refresh_hide、load_more_show、load_more_hide
     fun showRefresh(@RefreshState state: Int)
+
+    fun showLoading()
+
+    fun hideLoading()
 
 }

@@ -2,10 +2,12 @@ package com.git.reny.lib_base.base
 
 import android.app.Application
 import androidx.core.content.ContextCompat
-import com.alibaba.android.arouter.launcher.ARouter
 import com.git.reny.lib_base.R
+import com.git.reny.lib_base.base.app_task.InitARouter
+import com.git.reny.lib_base.base.app_task.InitMMKV
+import com.git.reny.lib_base.base.app_task.InitTimber
 import com.git.reny.lib_base.base.extras.getARouter
-import com.git.reny.lib_base.base.extras.getMyDrawable
+import com.git.reny.lib_base.base.taskdispatch.TaskDispatcher
 import com.git.reny.lib_imgload.ImgHelper
 import com.git.reny.lib_imgload.core.ImgLoaderConfig
 import com.scwang.smart.refresh.footer.ClassicsFooter
@@ -13,8 +15,6 @@ import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
-import timber.log.Timber
-import timber.log.Timber.DebugTree
 
 
 object App{
@@ -24,8 +24,16 @@ object App{
 fun Application.initBase(isDebug: Boolean){
     App.instance = this
 
-    initARouter(isDebug)
-    initTimber(isDebug)
+    TaskDispatcher.init(this)
+    val dispatcher = TaskDispatcher.createInstance()
+    dispatcher.addTask(InitARouter(isDebug))
+        .addTask(InitTimber(isDebug))
+        .addTask(InitMMKV())
+        .start()
+    dispatcher.await()
+
+    /*initARouter(isDebug)
+    initTimber(isDebug)*/
     initAutoSizeConfig()
     initRefreshStyle()
     initImgLoadConfig()
@@ -35,7 +43,7 @@ fun Application.onBaseTerminate(){
     getARouter().destroy()
 }
 
-private fun initARouter(isDebug: Boolean){
+/*private fun initARouter(isDebug: Boolean){
     if (isDebug) {
         ARouter.openLog();
         ARouter.openDebug();
@@ -60,7 +68,7 @@ private fun initTimber(isDebug: Boolean){
     }
 
     Timber.tag("Timber")
-}
+}*/
 
 private fun initAutoSizeConfig(){
     //不适配dp sp 启用mm单位 来适配屏幕 防止第三方控件用dp sp 造成影响

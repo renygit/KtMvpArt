@@ -4,6 +4,6 @@ import com.git.reny.mvp.MvpBaseView
 
 interface MvpView : MvpBaseView {
 
-    fun getStateView():StateView
+    fun getStateView():StateView?
 
 }

@@ -3,33 +3,54 @@ package com.git.reny.mvp_ui
 import android.os.Bundle
 import android.view.View
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
-import com.ethanhua.skeleton.ViewReplacer
 import com.ethanhua.skeleton.ViewSkeletonScreen
+import com.git.reny.common.widget.ProgressLoading
 import com.git.reny.lib_base.base.*
+import com.git.reny.lib_base.base.extras.setStatusHeight
 import com.git.reny.mvp.MvpBaseActivity
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 
-abstract class MvpActivity : MvpBaseActivity() {
+abstract class MvpActivity : MvpBaseActivity(), MvpView {
 
-    protected var screenBuilder : ViewSkeletonScreen.Builder? = null
+    protected var mScreenBuilder : ViewSkeletonScreen.Builder? = null
     private val mAllScreenBuilders = HashSet<ViewSkeletonScreen.Builder>()
     private val mAllScreens = HashSet<ViewSkeletonScreen>()
 
-    protected var screenRecyclerBuilder: RecyclerViewSkeletonScreen.Builder? = null
+    protected var mScreenRecyclerBuilder: RecyclerViewSkeletonScreen.Builder? = null
     private val mAllScreenRecyclerBuilders = HashSet<RecyclerViewSkeletonScreen.Builder>()
     private val mAllScreenRecyclers = HashSet<RecyclerViewSkeletonScreen>()
 
-    private var mViewReplacer:ViewReplacer? = null
-    private var mStateView:StateView? = null
-    private var mLoadingView:LoadingView? = null
+    protected var mMsv: MultiStateView? = null
     private var mRefreshLayout: RefreshLayout? = null
+
+    private var mProgressLoading: ProgressLoading? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initStatusView()
+        initMultiStateView()
         addScreenBuilders()
         initRefreshLayout()
+    }
+
+    private fun initStatusView() {
+        val status: View? = window.decorView.findViewById(R.id.status)
+        status?.let {
+            setStatusHeight(it)
+        }
+    }
+
+    private fun initMultiStateView() {
+        val view: View? = window.decorView.findViewById(R.id.msv)
+        view?.let {
+            mMsv = MultiStateView(it)
+        }
+    }
+
+    override fun getStateView(): StateView? {
+        return mMsv?.getStateView()
     }
 
     private fun addScreenBuilders() {
@@ -44,7 +65,7 @@ abstract class MvpActivity : MvpBaseActivity() {
 
     //多个ViewSkeletonScreen.Builder 重写
     open fun getScreenBuilders():MutableList<ViewSkeletonScreen.Builder>?{
-        screenBuilder?.let {
+        mScreenBuilder?.let {
             return mutableListOf(it)
         }
         return null
@@ -52,20 +73,10 @@ abstract class MvpActivity : MvpBaseActivity() {
 
     //多个RecyclerViewSkeletonScreen.Builder 重写
     open fun getScreenRecyclerBuilders():MutableList<RecyclerViewSkeletonScreen.Builder>?{
-        screenRecyclerBuilder?.let {
+        mScreenRecyclerBuilder?.let {
             return mutableListOf(it)
         }
         return null
-    }
-
-    open fun getViewReplacer() : ViewReplacer?{
-        if(mViewReplacer == null) {
-            val view: View? = window.decorView.findViewById(R.id.viewReplacer)
-            view?.let {
-                mViewReplacer = ViewReplacer(it)
-            }
-        }
-        return mViewReplacer
     }
 
     //如果有刷新控件 需要提前初始化好 和上面getViewReplacer()不太一样
@@ -82,62 +93,27 @@ abstract class MvpActivity : MvpBaseActivity() {
                     mRefreshLayout!!.setEnableFooterFollowWhenNoMoreData(true) //设置是否在没有更多数据之后 Footer 跟随内容
 
                     mRefreshLayout!!.setOnRefreshListener {
-                        mAllPresenters.forEach { it.loadData(true) }
+                        //只关联一个Presenter 如果有多个Presenter 细节自主处理
+                        mPresenter?.loadData(true)
+                        //mAllPresenters.forEach { it.loadData(true) }
                     }
 
                     mRefreshLayout!!.setOnLoadMoreListener {
-                        mAllPresenters.forEach { it.loadData(false) }
+                        //只关联一个Presenter 如果有多个Presenter 细节自主处理
+                        mPresenter?.loadData(false)
+                        //mAllPresenters.forEach { it.loadData(false) }
                     }
                 }
             }
         }
     }
 
-    open fun getLoadingId(): Int = 0
-    open fun getErrorId(): Int = 0
-    open fun getNoNetworkId(): Int = 0
-    open fun getEmptyId(): Int = 0
-
-
-    open fun getLoadingView(): View{
-        if(mLoadingView == null){
-            mLoadingView = LoadingView(this)
-        }
-        return mLoadingView!!
-    }
-
-    //不想自定义错误页面 但想修改文字，图片 可以重写此方法
-    open fun getErrorView(): View{
-        getStateView().setImg(R.mipmap.ic_error)
-        getStateView().setTip("加载出错，请重试")
-        return getStateView()
-    }
-    //不想自定义错误页面 但想修改文字，图片 可以重写此方法
-    open fun getNoNetworkView(): View{
-        getStateView().setImg(R.mipmap.ic_error)
-        getStateView().setTip("网络链接失败，请重试")
-        return getStateView()
-    }
-    //不想自定义错误页面 但想修改文字，图片 可以重写此方法
-    open fun getEmptyView(): View{
-        getStateView().setImg(R.mipmap.ic_empty)
-        getStateView().setTip("暂无相关数据")
-        return getStateView()
-    }
-
-    protected fun getStateView():StateView{
-        if(mStateView == null){
-            mStateView = StateView(this)
-        }
-        return mStateView!!
-    }
-
-
-    override fun showLoading(@LoadState state: Int) {
+    override fun showPageState(@LoadState state: Int) {
         when(state){
             STATE_LOADING -> {
                 //如果Loading为骨架屏
                 if(mAllScreenBuilders.size > 0 || mAllScreenRecyclerBuilders.size > 0){
+                    mMsv?.showContent()
                     if(mAllScreenBuilders.size > 0) {
                         mAllScreens.clear()
                         mAllScreenBuilders.forEach {
@@ -177,50 +153,12 @@ abstract class MvpActivity : MvpBaseActivity() {
     }
 
     private fun useViewReplacer(@LoadState state: Int){
-        val viewReplacer:ViewReplacer? = getViewReplacer()
-        if(viewReplacer != null){
-            when(state){
-                STATE_LOADING -> {
-                    if(getLoadingId() == 0){
-                        viewReplacer.replace(getLoadingView())
-                    }else {
-                        viewReplacer.replace(getLoadingId())
-                    }
-                }
-                STATE_ERROR -> {
-                    if(getErrorId() == 0){
-                        viewReplacer.replace(getErrorView())
-                    }else {
-                        viewReplacer.replace(getErrorId())
-                    }
-                }
-                STATE_NO_NETWORK -> {
-                    if(getNoNetworkId() == 0){
-                        viewReplacer.replace(getNoNetworkView())
-                    }else {
-                        viewReplacer.replace(getNoNetworkId())
-                    }
-                }
-                STATE_EMPTY -> {
-                    if(getEmptyId() == 0){
-                        viewReplacer.replace(getEmptyView())
-                    }else {
-                        viewReplacer.replace(getEmptyId())
-                    }
-                }
-                STATE_CONTENT -> {
-                    viewReplacer.restore()
-                }
-            }
-
-            viewReplacer.sourceView.setOnClickListener(if(state == STATE_LOADING || state == STATE_CONTENT) null else View.OnClickListener {
-                //点击重试
-                mAllPresenters.forEach { it.loadData(true) }
-            })
-        }else{
-            val loadingTip = if(state == STATE_LOADING) "需要重写screenBuilder 或者 " else ""
-            throw RuntimeException("${this.javaClass.simpleName}>>$loadingTip 需要在xml定义一个id名为viewReplacer的控件显示 $state")
-        }
+        mMsv?.showState(state)
+        mMsv?.setOnClick(if(state == STATE_LOADING || state == STATE_CONTENT) null else View.OnClickListener {
+            //点击重试 只关联一个Presenter 如果有多个Presenter 细节自主处理
+            mPresenter?.loadData(true)
+            //mAllPresenters.forEach { it.loadData(true) }
+        })
     }
 
 
@@ -246,5 +184,17 @@ abstract class MvpActivity : MvpBaseActivity() {
         }else{
             throw RuntimeException("${this.javaClass.simpleName}>> 需要在xml定义一个id名为srl的SmartRefreshLayout控件，用于刷新")
         }
+    }
+
+
+    override fun showLoading() {
+        if(mProgressLoading == null){
+            mProgressLoading = ProgressLoading.create(this)
+        }
+        mProgressLoading?.show()
+    }
+
+    override fun hideLoading() {
+        mProgressLoading?.dismiss()
     }
 }

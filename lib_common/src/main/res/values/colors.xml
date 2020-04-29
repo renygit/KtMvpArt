@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="theme">#008577</color>
+    <color name="theme">#499d93</color>
 
     <color name="colorPrimary">@color/theme</color>
     <color name="colorPrimaryDark">@color/theme</color>
     <color name="colorAccent">@color/theme</color>
 
     <color name="tool_bg_color_white">#f0f0f0</color>
+    <color name="home_top">#8c74fc</color>
+
+
+
+
+    <color name="orange">#FF9600</color>
+    <color name="aqua">#02D1AC</color>
+    <color name="yellow">#FFD200</color>
+    <color name="blue">#00C6FF</color>
+    <color name="green">#00E099</color>
+    <color name="pink">#FF3892</color>
+
+    <array name="splash_circle_colors">
+        <item>@color/blue</item>
+        <item>@color/green</item>
+        <item>@color/pink</item>
+        <item>@color/orange</item>
+        <item>@color/aqua</item>
+        <item>@color/yellow</item>
+    </array>
 </resources>

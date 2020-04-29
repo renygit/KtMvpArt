@@ -50,7 +50,7 @@ ext {
     depsLibs = [appcompact     : 'androidx.appcompat:appcompat:1.0.0',
                 kotlin         : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${depsVersion.kotlin_version}",
                 core_ktx       : 'androidx.core:core-ktx:1.2.0',
-                anko           : "org.jetbrains.anko:anko:${depsVersion.anko_version}",
+                anko           : "org.jetbrains.anko:anko-commons:${depsVersion.anko_version}",
                 autosize       : "me.jessyan:autosize:${depsVersion.autosize_version}",
                 statusbar      : "com.jaeger.statusbarutil:library:${depsVersion.statusbar_version}",
                 timber         : "com.jakewharton.timber:timber:${depsVersion.timber_version}",

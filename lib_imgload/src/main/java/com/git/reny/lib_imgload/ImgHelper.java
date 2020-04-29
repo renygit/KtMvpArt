@@ -12,6 +12,8 @@ public class ImgHelper{
         mConfig = config;
     }
 
+    //使用时做成单例  不然new很多对象
+    //@Deprecated Kotlin中一个方法搞定了很多参数配置  尽量不用这个库了（只用了其中的少数类和方法）
     public static ImgLoader get(){
         return new ImgLoaderProvider().getImgLoader(mConfig);
     }

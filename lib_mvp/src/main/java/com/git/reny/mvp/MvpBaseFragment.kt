@@ -30,6 +30,13 @@ abstract class MvpBaseFragment : RBaseFragment(), MvpBaseView{
     ): View? {
         if(rootView == null) {
             rootView = inflater.inflate(getLayoutId(), container, false)
+        } else{
+            try {
+                rootView?.parent?.let {
+                    it as ViewGroup
+                    it.removeView(rootView)
+                }
+            }catch (e:Exception){e.printStackTrace()}
         }
         return rootView
     }
