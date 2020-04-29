@@ -53,21 +53,4 @@ addJob(doAsync(exceptionHandle(), {//exceptionHandle：网络访问出错等异�
  可以自己写个BaseActivity继承MvpActivity,重写getLoadingId或者getLoadingView就可以了，具体的查看源码吧，源码太简单不多说了
  
   ##### 其它的都是MVP的套路了，有兴趣请看demo
-  ### 其它
-  还在用AOP来做集成式登录吗（在任何需要判断登录的地方加注解的方式），看看我项目中的方式
-  ```kotlin
-  fun Any.checkLogin(tip:String = "您未登录，请先登录", nextFunc: () -> Unit){
-    if(LoginApi.api.isLogin()){//ARouter接口访问login组件判断是否登录
-        nextFunc()
-    }else {
-        showToast(tip)
-        getARouter().build(RConfig.FtLogin.login).navigation()
-    }
-}
-
-//调用
-checkLogin { 登录后的操作 你要做的操作 }
-```
-同理，重复点击过滤之类的也可以这样写，当然，这些和本项目无关，就不一一例举了。本项目还有更多未完善的地方，没有集成dagger2,rxjava等，只是为了做一个
-能快速开发，快速迭代的架构。
 ### 翻太快到底了，没有更多代码了，真的很少，主要代码都贴完了，为RecyclerView设置Adapter这样的代码就不贴了，demo中也写了一个，还是vlayout的示例，如果有幸看到了这个项目，觉得有点帮助的话请给一个小星星，谢谢，祝秀发浓密 └(^o^)┘
