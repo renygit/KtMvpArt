@@ -3,7 +3,7 @@
 ### 第一步 布局
 ```xml
 <LinearLayout
-        android:id="@+id/viewReplacer"
+        android:id="@+id/msv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -23,7 +23,7 @@
 
     </LinearLayout>
 ```
-布局也许是这样,前2个id（viewReplacer，srl）在库中指定了的，不能修改，这样有什么用呢？如果定义了这两个id，多状态显示，下拉刷新，下拉加载更多的逻辑
+布局也许是这样,前2个id（msv，srl）在库中指定了的，不能修改，这样有什么用呢？如果定义了这两个id，多状态显示，下拉刷新，下拉加载更多的逻辑
 就不用写了。当然，你可以重写它的样式，动态修改显示的UI。唯一还要做的一步就是在activyt或者fragment中调用一下presenter的loadData方法，在你的presenter
 （继承MvpPresenter）中须要重写这个方法，super.loadData方法必须调，这样就完成了自动处理事件，在loadData中怎么访问网络等操作呢？看下面：
 ### 第二步 使用协程加载数据
@@ -43,7 +43,7 @@ addJob(doAsync(exceptionHandle(), {//exceptionHandle：网络访问出错等异�
  ### 第三步（也可以没有）
  想使用骨架屏（[Skeleton](https://github.com/ethanhua/Skeleton)）怎么办呢，在initView中初始化screenBuilder或者screenRecyclerBuilder
  ```kotlin
- screenRecyclerBuilder = Skeleton.bind(recyclerView)
+ mScreenRecyclerBuilder = Skeleton.bind(recyclerView)
             .adapter(adapter)
             .count(1)
             .load(R.layout.screen_page)
